@@ -14,6 +14,7 @@ public class TryFeignClient {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
         mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+
         DotaFeignClient client = Feign
                 .builder()
                 .logger(new Slf4jLogger())
@@ -21,8 +22,14 @@ public class TryFeignClient {
                 .decoder(new JacksonDecoder(mapper))
                 .target(DotaFeignClient.class,"https://api.steampowered.com");
 
-        DotaFetchPageJson fetchPageJson = client.fetchDotaMatches("JSON", "", 0L);
+        String steamDevKey = "";
 
+        DotaFetchPageJson fetchPageJson = client.fetchDotaMatches("JSON", steamDevKey, 0L);
+
+        System.out.println("Fetch some matches...");
         System.out.println(fetchPageJson);
+
+        System.out.println("Fetch details of match...");
+        System.out.println(client.fetchDotaMatchDetails("JSON", steamDevKey, 27110133L));
     }
 }
